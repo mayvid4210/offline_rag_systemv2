@@ -1,0 +1,26 @@
+from pathlib import Path
+import fitz
+
+UPLOAD_FOLDER = Path("uploads")
+
+
+def save_uploaded_file(uploaded_file):
+    file_path = UPLOAD_FOLDER / uploaded_file.name
+
+    with open(file_path, "wb") as f:
+        f.write(uploaded_file.getbuffer())
+
+    return file_path
+
+
+def extract_text(file_path):
+    pdf = fitz.open(file_path)
+
+    text = ""
+
+    for page in pdf:
+        text += page.get_text()
+
+    pdf.close()
+
+    return text

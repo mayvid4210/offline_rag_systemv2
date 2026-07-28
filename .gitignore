@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual Environment
+.venv/
+venv/
+
+# macOS
+.DS_Store
+
+# Streamlit
+.streamlit/secrets.toml
+
+# IDE
+.vscode/
+
+# Uploads
+uploads/
+
+# Environment Variables
+.env
+
+# FAISS Indexes (later)
+*.faiss
+*.pkl
