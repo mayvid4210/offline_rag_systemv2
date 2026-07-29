@@ -3,8 +3,15 @@ import streamlit as st
 from rag import save_uploaded_file, extract_text
 from chunking import recursive_chunker
 from embeddings import Embedder
+from vector_store import VectorStore
 
 st.set_page_config(page_title="Offline RAG")
+
+
+@st.cache_resource
+def get_embedder():
+    return Embedder()
+
 
 st.title("📄 Offline RAG Chatbot")
 
@@ -14,31 +21,33 @@ uploaded_file = st.file_uploader(
 )
 
 if uploaded_file:
-    # Save the uploaded PDF
-    file_path = save_uploaded_file(uploaded_file)
 
+    # Load the embedding model only when it's needed
+    embedder = get_embedder()
+    st.write("✅ Embedding model loaded")
+
+    # Save uploaded PDF
+    file_path = save_uploaded_file(uploaded_file)
     st.success(f"Saved: {file_path.name}")
 
+    # Extract text
     st.write("✅ PDF uploaded")
 
     text = extract_text(file_path)
     st.write("✅ Text extracted")
 
+    # Chunk the text
     chunks = recursive_chunker(text)
     st.write(f"✅ Created {len(chunks)} chunks")
 
-    embedder = Embedder()
-    st.write("✅ Embedder created")
-
+    # Generate embeddings
     embeddings = embedder.embed(chunks)
     st.write("✅ Embeddings generated")
 
-    from vector_store import VectorStore
-
-    # ...
-
+    # Create FAISS index
     vector_store = VectorStore(embeddings.shape[1])
 
+    # Store embeddings
     vector_store.add(embeddings)
 
     st.success(f"Added {vector_store.count()} vectors to FAISS.")
