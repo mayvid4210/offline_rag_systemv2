@@ -25,3 +25,6 @@ uploads/
 # FAISS Indexes (later)
 *.faiss
 *.pkl
+
+# Generated knowledge base
+knowledge_base/
