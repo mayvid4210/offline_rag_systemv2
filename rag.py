@@ -1,10 +1,14 @@
 from pathlib import Path
+
 import fitz
 
+
 UPLOAD_FOLDER = Path("uploads")
+UPLOAD_FOLDER.mkdir(exist_ok=True)
 
 
 def save_uploaded_file(uploaded_file):
+
     file_path = UPLOAD_FOLDER / uploaded_file.name
 
     with open(file_path, "wb") as f:
@@ -14,6 +18,7 @@ def save_uploaded_file(uploaded_file):
 
 
 def extract_text(file_path):
+
     pdf = fitz.open(file_path)
 
     text = ""

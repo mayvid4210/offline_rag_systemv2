@@ -4,6 +4,7 @@ from rag import save_uploaded_file, extract_text
 from chunking import recursive_chunker
 from embeddings import Embedder
 from vector_store import VectorStore
+from models import ChunkMetadata
 
 st.set_page_config(page_title="Offline RAG")
 
@@ -15,6 +16,11 @@ def get_embedder():
 
 st.title("📄 Offline RAG Chatbot")
 
+embedder = get_embedder()
+vector_store = VectorStore()
+
+st.sidebar.metric("Knowledge Base Size", vector_store.count())
+
 uploaded_file = st.file_uploader(
     "Upload a PDF",
     type=["pdf"]
@@ -22,39 +28,40 @@ uploaded_file = st.file_uploader(
 
 if uploaded_file:
 
-    # Load the embedding model only when it's needed
-    embedder = get_embedder()
     st.write("✅ Embedding model loaded")
 
-    # Save uploaded PDF
     file_path = save_uploaded_file(uploaded_file)
     st.success(f"Saved: {file_path.name}")
-
-    # Extract text
-    st.write("✅ PDF uploaded")
 
     text = extract_text(file_path)
     st.write("✅ Text extracted")
 
-    # Chunk the text
     chunks = recursive_chunker(text)
     st.write(f"✅ Created {len(chunks)} chunks")
 
-    # Generate embeddings
     embeddings = embedder.embed(chunks)
     st.write("✅ Embeddings generated")
 
-    # Create FAISS index
-    vector_store = VectorStore(embeddings.shape[1])
+    metadata = []
 
-    # Store embeddings
-    vector_store.add(embeddings)
+    starting_chunk_id = vector_store.count()
 
-    st.success(f"Added {vector_store.count()} vectors to FAISS.")
+    for index, chunk in enumerate(chunks):
 
-    # -----------------------------
-    # Chunk Information
-    # -----------------------------
+        metadata.append(
+            ChunkMetadata(
+                chunk_id=starting_chunk_id + index,
+                chunk_index=index,
+                document_name=file_path.name,
+                text=chunk
+            )
+        )
+
+    vector_store.add(embeddings, metadata)
+    vector_store.save()
+
+    st.success(f"Knowledge Base now contains {vector_store.count()} chunks.")
+
     st.subheader("Chunk Information")
 
     st.write(f"Total Chunks: **{len(chunks)}**")
@@ -67,13 +74,10 @@ if uploaded_file:
             disabled=True
         )
 
-    # -----------------------------
-    # Embedding Information
-    # -----------------------------
     st.subheader("Embedding Information")
 
     st.write(f"Number of Embeddings: **{len(embeddings)}**")
     st.write(f"Embedding Dimension: **{len(embeddings[0])}**")
 
-    st.write("First 10 values of the first embedding:")
+    st.write("First 10 values of first embedding:")
     st.write(embeddings[0][:10])
