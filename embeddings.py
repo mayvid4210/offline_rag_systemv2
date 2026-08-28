@@ -8,7 +8,10 @@ class Embedder:
             "BAAI/bge-small-en-v1.5"
         )
 
-    def embed(self, chunks):
+    def embed_documents(self, chunks):
+        """
+        Generate embeddings for document chunks.
+        """
 
         embeddings = self.model.encode(
             chunks,
@@ -16,3 +19,15 @@ class Embedder:
         )
 
         return embeddings
+
+    def embed_query(self, query):
+        """
+        Generate an embedding for a user query.
+        """
+
+        embedding = self.model.encode(
+            query,
+            normalize_embeddings=True
+        )
+
+        return embedding
