@@ -1,30 +1,44 @@
-# Python
+# Python and environments
 __pycache__/
 *.py[cod]
 *.so
-
-# Virtual Environment
 .venv/
 venv/
+.pytest_cache/
 
-# macOS
-.DS_Store
-
-# Streamlit
-.streamlit/secrets.toml
-
-# IDE
-.vscode/
-
-# Uploads
+# Generated document data and local model caches
 uploads/
-
-# Environment Variables
-.env
-
-# FAISS Indexes (later)
-*.faiss
-*.pkl
-
-# Generated knowledge base
 knowledge_base/
+models/
+.cache/
+.huggingface/
+.ollama/
+*.faiss
+*.index
+*.pkl
+*.gguf
+*.safetensors
+
+# Environment files and credentials
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+.aws/
+credentials.json
+client_secret*.json
+*.pem
+*.key
+
+# Temporary and local tooling files
+*.tmp
+*.temp
+*.log
+*.bak
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini

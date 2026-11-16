@@ -1,0 +1,44 @@
+PREREQUISITES
+Python 3.13, 64-bit. Run commands from the repository root.
+Install Ollama: https://ollama.com/download
+
+ONE-TIME ENVIRONMENT SETUP
+Windows PowerShell:
+py -3.13 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
+macOS / Linux:
+python3.13 -m venv .venv
+source .venv/bin/activate
+
+ONE-TIME DEPENDENCIES (activated environment; internet required)
+python -m pip install -r requirements.txt
+
+START OLLAMA (terminal 1; skip if already running)
+Check: ollama list
+
+Windows PowerShell:
+$env:OLLAMA_HOST="127.0.0.1:11434"
+$env:OLLAMA_NO_CLOUD="1"
+$env:OLLAMA_NOPRUNE="1"
+ollama serve
+
+macOS / Linux:
+OLLAMA_HOST=127.0.0.1:11434 OLLAMA_NO_CLOUD=1 OLLAMA_NOPRUNE=1 ollama serve
+
+ONE-TIME MODELS (terminal 2, activated environment; Ollama running; internet required)
+ollama pull qwen2.5:3b
+python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('BAAI/bge-small-en-v1.5')"
+
+START APPLICATION (terminal 2; also used for subsequent starts)
+Activate the existing environment using the activation command above.
+python -c "import streamlit, fitz, faiss, numpy, httpx, ollama, sentence_transformers, langchain_text_splitters; print('Dependencies ready')"
+ollama list
+python -m streamlit run app.py --server.address 127.0.0.1 --browser.gatherUsageStats false
+
+OPEN
+http://127.0.0.1:8501
+
+STOP
+Ctrl+C in each terminal running a server.
+After setup, startup requires no model downloads. Keep local networking available.
