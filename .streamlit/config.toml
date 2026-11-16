@@ -1,0 +1,25 @@
+[browser]
+gatherUsageStats = false
+
+[client]
+toolbarMode = "viewer"
+
+[theme.light]
+primaryColor = "#365d46"
+backgroundColor = "#faf9f6"
+secondaryBackgroundColor = "#f0efec"
+textColor = "#202020"
+
+[theme.light.sidebar]
+backgroundColor = "#efeeeb"
+secondaryBackgroundColor = "#e5e5e2"
+
+[theme.dark]
+primaryColor = "#668573"
+backgroundColor = "#101113"
+secondaryBackgroundColor = "#242729"
+textColor = "#ecebe7"
+
+[theme.dark.sidebar]
+backgroundColor = "#161719"
+secondaryBackgroundColor = "#242729"
